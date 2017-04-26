@@ -3,17 +3,26 @@ CMSC424 Webapp 2017
 final paper -> https://docs.google.com/document/d/1clHSE_bR40eoVQcRG7vf9tQvJvcpSpNZZdxtdIWqSfg/edit?usp=sharing
 # Use this readme to post tasks when we have them
 
+social element on homepage
+edit your own page
+view a friend page (version of edit your own page)
+
+user can manually add in path. We will have a question mark thing you can hover over for info on how to do it
+html parsing is still an option
+
+buttons on your own dagr page
+    a. add new file 
+    b. add new category
 # Tasks
-- on startup, db cleans itself. Need to stop running migrations every time the app stats
+- on startup, db cleans itself. Need to stop running migrations every time the app stats <- jake
 - add in remaining models/controllers. controllers are just the requests 
 - UX need to figure out our designs
     im thinking something that looks like google drive
 - UI need to implement those designs, i don't think that there will be many pages. Maybe an about DAGR page?
-- possibly a social elemen? can see everyone else's DAGRs
-- consider making public/private DAGRS to give it a social aspect
-- write html parser <-done i think, unless we want to handle image urls
-- possibly add type to document table (would be like 'webpage' for webpages)
-- with current setup cannot grab user path, it should
+
+- write html parser <- jake
+- possibly add type to document table (would be like 'webpage' for webpages) <-jake
+- bulk data can be put in a whole folder 
 
 project deals with storing metadata from files
 

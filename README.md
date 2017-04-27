@@ -13,6 +13,7 @@ html parsing is still an option
 buttons on your own dagr page
     a. add new file 
     b. add new category
+
 # Tasks
 - on startup, db cleans itself. Need to stop running migrations every time the app stats <- jake
 - add in remaining models/controllers. controllers are just the requests 
@@ -23,6 +24,7 @@ buttons on your own dagr page
 - write html parser <- jake
 - possibly add type to document table (would be like 'webpage' for webpages) <-jake
 - bulk data can be put in a whole folder 
+- duplicate content <- check when a new dagr is inserted
 
 project deals with storing metadata from files
 

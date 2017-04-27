@@ -65,7 +65,7 @@ app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', '
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/login' }));
 
 //api
-// app.post('/api/html', apiController.postHtml);
+app.post('/api/html', apiController.postHtml);
 
 // Production error handler
 if (app.get('env') === 'production') {

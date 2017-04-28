@@ -14,15 +14,17 @@ block content
       .alert.alert-info(role='alert')
         for info in messages.info
           div= info.msg
-    .row
-      for user in users
-        .row
-          .col-sm-4
-            .panel
-              .panel-body
-                h3 #{user.name}
-                p Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-                a.btn.btn-default(href='#', role='button') View details
+    for user in users
+      .row
+        .col-sm-4
+          .panel 
+            .panel-body
+              .row
+                .col-sm-6
+                  h3 #{user.name}
+                  a.btn.btn-default(href='/mmda/#{user.facebook}', role='button') View MMDA
+                img.col-sm-6(src='#{user.picture}')
+      //- possibly show the latest entry for each user?
       //-   .col-sm-4
       //-     .panel
       //-       .panel-body

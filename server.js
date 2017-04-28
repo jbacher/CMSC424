@@ -17,7 +17,8 @@ dotenv.load();
 // Controllers
 var HomeController = require('./controllers/home');
 var userController = require('./controllers/user');
-var contactController = require('./controllers/contact');
+// var contactController = require('./controllers/contact');
+var userDagrController = require('./controllers/userDagr')
 var apiController = require('./controllers/api')
 
 // Passport OAuth strategies
@@ -46,8 +47,8 @@ app.use(function(req, res, next) {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', HomeController.index);
-app.get('/contact', contactController.contactGet);
-app.post('/contact', contactController.contactPost);
+// app.get('/contact', contactController.contactGet);
+// app.post('/contact', contactController.contactPost);
 app.get('/account', userController.ensureAuthenticated, userController.accountGet);
 app.put('/account', userController.ensureAuthenticated, userController.accountPut);
 app.delete('/account', userController.ensureAuthenticated, userController.accountDelete);
@@ -65,7 +66,11 @@ app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', '
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/login' }));
 
 //api
-app.post('/api/html', apiController.postHtml);
+app.post('/api/:author_id/html', apiController.postHtml);
+// app.get('/api/top_level/:user_id', apiController.getTopLevel)
+
+app.get('/mmda/:user_id', userDagrController.getMMDA);
+app.get('/mmda/:user_id/all', userDagrController.getAll);
 
 // Production error handler
 if (app.get('env') === 'production') {

@@ -6,13 +6,14 @@ nav.navbar.navbar-default.navbar-static-top
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      a.navbar-brand(href='/') Project name
+      a.navbar-brand(href='/') DAGR Dictionary
     #navbar.navbar-collapse.collapse
       ul.nav.navbar-nav
         li(class=(title == 'Home') ? 'active' : null)
-          a(href='/') Home
-        li(class=(title == 'Contact') ? 'active' : null)
-          a(href='/contact') Contact
+          a(href='/') All MMDAs
+        if user 
+          li(class=(title == 'MMDA') ? 'active' : null)
+            a(href='/mmda/#{user.facebook}') My MMDA
       ul.nav.navbar-nav.navbar-right
         if user
           li.dropdown
@@ -34,3 +35,5 @@ nav.navbar.navbar-default.navbar-static-top
             a(href='/login') Log in
           li(class=(title == 'Sign up') ? 'active' : null)
             a(href='/signup') Sign up
+//-consider putting a search bar up here, can search for names on homepage
+//- can search for DAGRS on user pages

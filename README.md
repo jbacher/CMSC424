@@ -38,3 +38,10 @@ There will also be support for categories, so one category can be a DAGR made up
 
 He wants a specific format for tasks. Moving old task info to a new google doc
 https://docs.google.com/document/d/1XnftvHBu_8bX9Y126O7hY7Og3dtOK6gV3jk2JF_IH8o/edit?usp=sharing
+
+#Stack
+    -NodeJS
+    -Express
+    -MySQL
+    -Jade
+    -Knex/Bookshelf

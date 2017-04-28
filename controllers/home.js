@@ -14,6 +14,11 @@ exports.index = function(req, res) {
           title: 'Home',
           users: resp
         });
+    } else {
+      return res.render('home', {
+        title: 'Home',
+        users: []
+      })
     }
   })
   //below should be in a catch block or else statement

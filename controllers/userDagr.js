@@ -4,35 +4,34 @@ var Dagr = require('../models/Dagr');
 
 //TODO remember not return deleted ones
 
-exports.getMMDA = function(req, res) {
+exports.getAll = function(req, res) {
     var user_id = req.params.user_id;
-    var qb = Dagr.query();
-    qb.where({author_id: user_id}).select()
+    var subquery = Dagr.query()
+    // subquery.join('parent_child', 'guid', 'parent_child.parent_dagr_guid')
+    .whereNull('dagr.deletion_time')
+    .select()
+
+    // var qb = Dagr.query();
+
     .then(function(resp) {
         console.log(resp);
         res.send(resp)
         //above is temporary 
     })
-    //the id corresponds to the "facebook" column of the user table
-    //use a an api endpoint (or do it here)
-        //execute a query 
-        //use bookshelfjs syntax
-        //grab all of the top level DAGRs and render them using the jade template engine
-    //THERE WILL BE AN OPTION TO DISPLAY ALL LOWEST LEVEL DARGS USING THE RANGE QUERY
-    // return res.render('user', {
-        
-    // })
+
+    //this should only do top-level queries
+    //ones that have no parent
 };
 
-exports.getAll = function(req, res){
+exports.getMMDA = function(req, res){
     var user_id = req.params.user_id;
     //this is the range query 
     var subquery = Dagr.query();
-    subquery.join('parent_child', 'author_id', 'parent_child.parent_dagr_guid')
-    .select('dagr.author_id');
+    subquery.join('parent_child', 'guid', 'parent_child.parent_dagr_guid')
+    .select('dagr.guid');
 
     var qb = Dagr.query();
-    qb.select().where('author_id', 'not in', subquery).then(function(resp){
+    qb.where({author_id: user_id}).where('guid', 'not in', subquery).whereNull('deletion_time').select().then(function(resp){
         console.log(resp);
         res.send(resp);
     })

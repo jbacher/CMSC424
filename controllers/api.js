@@ -1,6 +1,7 @@
 var Dagr = require('../models/Dagr');
 var Document = require('../models/Document');
 var Dagr_doc = require('../models/Dagr_doc');
+var Parent_child = require('../models/Parent_child');
 var scrape = require('html-metadata');
 const uuidV1 = require('uuid/v1');
 
@@ -36,8 +37,20 @@ exports.postFile = function(req, res) {
                     dagr_guid: uuid1,
                     document_guid: uuid2
                 }).save().then(function(user){
-                    res.send('success')
+                    if (req.params.parent_dagr_guid == 'top') {
+                        res.send('success');
+                    } else {
+                        new Parent_child({
+                            parent_dagr_guid: req.params.parent_dagr_guid,
+                            child_dagr_guid: uuid1
+                        }).save().then(function (user) {
+                            res.send('success');
+                        }).catch(function(err){
+                            res.send('error in 4th query');
+                        })
+                    }
                 }).catch(function(err){
+                    console.log(err);
                     res.send('error in third query')
                 })
             }).catch(function(err){
@@ -82,7 +95,19 @@ exports.postHtml = function(req, res) {
                     dagr_guid: uuid1,
                     document_guid: uuid2
                 }).save().then(function(user){
-                    res.send('success')
+                    if (req.params.parent_dagr_guid == 'top') {
+                        return res.send('success');
+                    } else {
+                        new Parent_child({
+                            parent_dagr_guid: req.params.parent_dagr_guid,
+                            child_dagr_guid: uuid1
+                        }).save().then(function (user) {
+                            res.send('success');
+                        }).catch(function(err){
+                            console.log(err);
+                            res.send('error in 4th query');
+                        })
+                    }
                 }).catch(function(err){
                     res.send('error in third query')
                 })
@@ -103,19 +128,4 @@ exports.postHtml = function(req, res) {
 
 exports.postCategory = function (req,res) {
 
-}
-
-//the below api endpoints post DAGRs that are children of other Dagrs
-//so need to update the parent child table
-
-exports.postHtmlChild = function(req,res) {
-
-}
-
-exports.postFileChild = function(req,res) {
-
-}
-
-exports.postCategoryChild = function(req,res) {
-    
 }

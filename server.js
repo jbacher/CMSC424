@@ -66,12 +66,9 @@ app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', '
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/login' }));
 
 //api
-app.post('/api/:author_id/html', apiController.postHtml);
-app.post('/api/:author_id/file', apiController.postFile);
-app.post('/api/:author_id/category', apiController.postCategory);
-app.post('/api/:author_id/:parent_dagr_guid/html', apiController.postHtmlChild);
-app.post('/api/:author_id/:parent_dagr_guid/file', apiController.postFileChild);
-app.post('/api/:author_id/:parent_dagr_guid/category', apiController.postCategoryChild);
+app.post('/api/:author_id/html/:parent_dagr_guid', apiController.postHtml);
+app.post('/api/:author_id/file/:parent_dagr_guid', apiController.postFile);
+app.post('/api/:author_id/category/:parent_dagr_guid', apiController.postCategory);
 
 // app.get('/api/top_level/:user_id', apiController.getTopLevel)
 

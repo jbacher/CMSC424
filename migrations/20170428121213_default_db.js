@@ -29,8 +29,8 @@ exports.up = function(knex, Promise) {
     //   table.foreign('author_id').references('users.facebook');
     }),
     knex.schema.createTableIfNotExists('parent_child', function(table) {
-      table.uuid('parent_dagr_guid');
-      table.uuid('child_dagr_guid');
+      table.string('parent_dagr_guid');
+      table.string('child_dagr_guid');
     //   table.foreign('parent_dagr_guid').references('dagr.guid');
     //   table.foreign('child_dagr_guid').references('dagr.guid');
     }),

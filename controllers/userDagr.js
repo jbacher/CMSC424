@@ -41,3 +41,8 @@ exports.getMMDA = function(req, res){
     // })
 };
 
+//this is what happens when you are on the ui and click a folder
+//it will render all DIRECT children of one dagr
+exports.getCategory = function(req,res) {
+
+}

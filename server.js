@@ -67,6 +67,7 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRe
 
 //api
 app.post('/api/:author_id/html', apiController.postHtml);
+app.post('/api/:author_id/file', apiController.postFile);
 // app.get('/api/top_level/:user_id', apiController.getTopLevel)
 
 app.get('/mmda/:user_id', userDagrController.getMMDA);

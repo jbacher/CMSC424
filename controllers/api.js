@@ -100,3 +100,22 @@ exports.postHtml = function(req, res) {
         });
     });
 }
+
+exports.postCategory = function (req,res) {
+
+}
+
+//the below api endpoints post DAGRs that are children of other Dagrs
+//so need to update the parent child table
+
+exports.postHtmlChild = function(req,res) {
+
+}
+
+exports.postFileChild = function(req,res) {
+
+}
+
+exports.postCategoryChild = function(req,res) {
+    
+}

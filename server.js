@@ -68,6 +68,11 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRe
 //api
 app.post('/api/:author_id/html', apiController.postHtml);
 app.post('/api/:author_id/file', apiController.postFile);
+app.post('/api/:author_id/category', apiController.postCategory);
+app.post('/api/:author_id/:parent_dagr_guid/html', apiController.postHtmlChild);
+app.post('/api/:author_id/:parent_dagr_guid/file', apiController.postFileChild);
+app.post('/api/:author_id/:parent_dagr_guid/category', apiController.postCategoryChild);
+
 // app.get('/api/top_level/:user_id', apiController.getTopLevel)
 
 app.get('/mmda/:user_id', userDagrController.getMMDA);

@@ -74,6 +74,7 @@ app.post('/api/:author_id/category/:parent_dagr_guid', apiController.postCategor
 
 app.get('/mmda/:user_id', userDagrController.getMMDA);
 app.get('/mmda/:user_id/all', userDagrController.getAll);
+app.get('/mmda/:user_id/:dagr_guid', userDagrController.getCategory)
 
 // Production error handler
 if (app.get('env') === 'production') {

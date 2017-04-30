@@ -15,7 +15,10 @@ exports.getAll = function(req, res) {
 
     .then(function(resp) {
         console.log(resp);
-        res.send(resp)
+        res.render('user', {
+            title: 'My MMDA',
+            dagrs: resp
+        })
         //above is temporary 
     })
 
@@ -33,7 +36,10 @@ exports.getMMDA = function(req, res){
     var qb = Dagr.query();
     qb.where({author_id: user_id}).where('guid', 'not in', subquery).whereNull('deletion_time').select().then(function(resp){
         console.log(resp);
-        res.send(resp);
+        res.render('user', {
+            dagrs: resp,
+            title: 'My MMDA'
+        })
     })
     
     // return res.render('user', {

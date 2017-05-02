@@ -1,5 +1,6 @@
 extends layout
 block content
+    //- there should be a button up here or on the header that will allow for range queries
     for dagr in dagrs 
         .row
             .panel
@@ -12,3 +13,12 @@ block content
                         li Last Modified: #{dagr.last_Modified}
                         li Size: #{dagr.size}
                         li Author Id: #{dagr.author_id}
+    //- below should only appear when a user logs in
+    //- they will have to click a button for this to pop up
+    form(method='POST' action='/')
+        div.form-group.row
+            label.col-form-label(for='path') Path:
+            input.form-control(type='text' name='path')
+        div.form-group.row
+            div.offset-sm-2.col-sm-10
+                button.btn.btn-primary(type='submit') Submit

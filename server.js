@@ -70,28 +70,22 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRe
 app.post('/api/:author_id/html/:parent_dagr_guid', apiController.postHtml);
 app.post('/api/:author_id/file/:parent_dagr_guid', apiController.postFile);
 app.post('/api/:author_id/category/:parent_dagr_guid', apiController.postCategory);
-<<<<<<< HEAD
 
 app.get('/download', downloadController.download)
-=======
 app.post('/api/:author_id/orphan', apiController.getOrphan);
 app.post('/api/:author_id/sterile', apiController.getSterile);
 app.post('/api/:author_id/time_range', apiController.getTimeRange);
 app.post('/api/:author_id/search', apiController.search)
->>>>>>> 73b0e8d04ac8cb4b79df2ff0299a3ac629eb353a
 
 // app.get('/api/top_level/:user_id', apiController.getTopLevel)
 
 app.get('/mmda/:user_id', userDagrController.getMMDA);
 app.get('/mmda/:user_id/all', userDagrController.getAll);
-<<<<<<< HEAD
 app.get('/mmda/:user_id/:dagr_guid', userDagrController.getCategory)
 // app.get('/api/:author_id/orphan', apiController.getOrphan);
 // app.get('/api/:author_id/sterile', apiController.getSterile);
 // app.get('/api/:author_id/time_range', apiController.getTimeRange);
-=======
 app.get('/mmda/:user_id/:dagr_guid', userDagrController.getCategory);
->>>>>>> 73b0e8d04ac8cb4b79df2ff0299a3ac629eb353a
 
 app.post('/api/:author_id/bulkupload', apiController.bulkUpload);
 

@@ -23,7 +23,7 @@ exports.postFile = function(req, res) {
         creation_time: currTime,
         last_Modified: currTime,
         author_id : req.params.author_id,
-        size: 10
+        size: req.body.size
         // author_id: //how to get id of current user, maybe use jquery?
     }).save()
     .then(function(user) {
@@ -128,4 +128,92 @@ exports.postHtml = function(req, res) {
 
 exports.postCategory = function (req,res) {
 
+}
+
+exports.bulkUpload = function (req,res) {
+    var dagr_name = req.body.name;
+    var files_to_be_added = req.body.dagrs;
+
+    //post the new category dagr and get its id
+    var uuid3 = uuidV1();
+    var currTime = new Date();
+
+    new Dagr({  
+        guid: uuid3,
+        name: req.body.name,
+        creation_time: currTime,
+        last_Modified: currTime,
+        author_id : req.params.author_id,
+        size: -1
+        // author_id: //how to get id of current user, maybe use jquery?
+    }).save().then(function (user){
+
+    new_dagr_guid = uuid3
+    // console.log(files_to_be_added)
+    console.log('hi2')
+    for (i=0;i<files_to_be_added.length;i+=3) {
+        // console.log("hi")
+        // e = files_to_be_added[i]
+        var currTime = new Date();
+    //dont forget to save it to dagr doc as well!!!!!
+    // var qb = Dagr.query();
+    
+    //possibly a duplicate check here
+        var uuid1 = uuidV1(); 
+        var uuid2 =  uuidV1();
+        var name = files_to_be_added[i]
+        var size = files_to_be_added[i+2]
+        var path = files_to_be_added[i+1]
+        new Dagr({
+            guid: uuid1,
+            name: name,
+            creation_time: currTime,
+            last_Modified: currTime,
+            author_id : req.params.author_id,
+            size: size
+            // author_id: //how to get id of current user, maybe use jquery?
+        }).save()
+        .then(function(user1) {
+
+            //probably want to redirect somewhere else
+            //maybe want to send an acknowledgment it worked and then have popup
+            console.log('hi3')
+            console.log(files_to_be_added[i+1])
+            new Document({
+                    guid: uuid2,
+                    filepath_url: path
+                }).save().then(function(user2){
+                    new Dagr_doc({
+                        dagr_guid: user1.get('guid'),
+                        document_guid: user2.get('guid')
+                    }).save().then(function(user3){
+                            // console.log('user');
+                            // console.log(user.attributes);
+                            new Parent_child({
+                                parent_dagr_guid: new_dagr_guid,
+                                child_dagr_guid: user3.get('dagr_guid')
+                            }).save().then(function (user) {
+                                console.log('success');
+                                // res.send('success')
+                            }).catch(function(err){
+                                console.log(err)
+                                console.log('error in 4th query');
+                            })
+                    }).catch(function(err){
+                        console.log(err);
+                        console.log('error in third query')
+                    })
+                }).catch(function(err){
+                    console.log('error in second query')
+                })
+        })
+        .catch(function(err) {
+            //how to handle this error
+            console.log(err);
+            // res.send(err);
+            // res.send('error');
+        });
+    }    
+    res.send('success')
+    })
 }

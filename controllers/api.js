@@ -164,14 +164,31 @@ exports.getTimeRange = function(req, res) {
     var start = req.body.start_time;
     var end = req.body.end_time;
 
-    console.log(start);
-    console.log(end);
-
     var qb = Dagr.query();
     qb.where({author_id: author_id}).whereNull('deletion_time')
     .whereBetween('creation_time', [start, end]).select().then(function(resp) {
         console.log(resp);
         res.send(resp);
     })
+
+}
+
+exports.search = function(req, res) {
+    var author_id = req.params.author_id;
+    var name = req.body.name;
+    var creation_time = req.body.creation_time;
+    var guid = req.body.guid;
+    var last_Modified = req.body.last_Modified;
+
+    var qb = Dagr.query();
+    qb.where({author_id: author_id}).whereNull('deletion_time')
+    .andWhere(function() {
+        this.where('guid', guid).orWhere('name', name).orWhere('creation_time', creation_time).orWhere('last_Modified',last_Modified)
+    }).select().then(function(resp) {
+        console.log(resp);
+        res.send(resp);
+    })
+
+
 
 }

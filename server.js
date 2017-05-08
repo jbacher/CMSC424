@@ -72,7 +72,7 @@ app.post('/api/:author_id/category/:parent_dagr_guid', apiController.postCategor
 app.post('/api/:author_id/orphan', apiController.getOrphan);
 app.post('/api/:author_id/sterile', apiController.getSterile);
 app.post('/api/:author_id/time_range', apiController.getTimeRange);
-
+app.post('/api/:author_id/search', apiController.search)
 
 // app.get('/api/top_level/:user_id', apiController.getTopLevel)
 

@@ -69,17 +69,16 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRe
 app.post('/api/:author_id/html/:parent_dagr_guid', apiController.postHtml);
 app.post('/api/:author_id/file/:parent_dagr_guid', apiController.postFile);
 app.post('/api/:author_id/category/:parent_dagr_guid', apiController.postCategory);
+app.post('/api/:author_id/orphan', apiController.getOrphan);
+app.post('/api/:author_id/sterile', apiController.getSterile);
+app.post('/api/:author_id/time_range', apiController.getTimeRange);
 
 
 // app.get('/api/top_level/:user_id', apiController.getTopLevel)
 
 app.get('/mmda/:user_id', userDagrController.getMMDA);
 app.get('/mmda/:user_id/all', userDagrController.getAll);
-app.get('/mmda/:user_id/:dagr_guid', userDagrController.getCategory)
-app.get('/api/:author_id/orphan', apiController.getOrphan);
-app.get('/api/:author_id/sterile', apiController.getSterile);
-app.get('/api/:author_id/time_range', apiController.getTimeRange);
-
+app.get('/mmda/:user_id/:dagr_guid', userDagrController.getCategory);
 
 
 

@@ -15,7 +15,7 @@ exports.postFile = function(req, res) {
     // var qb = Dagr.query();
 
     //possibly a duplicate check here
-    var uuid1 = uuidV1(); 
+    var uuid1 = uuidV1();
     var uuid2 =  uuidV1();
     new Dagr({
         guid: uuid1,
@@ -77,7 +77,7 @@ exports.postHtml = function(req, res) {
             res.send('error')
         }
         var currTime = new Date();
-        var uuid1 = uuidV1(); 
+        var uuid1 = uuidV1();
         var uuid2 = uuidV1();
         new Dagr({
             guid: uuid1,
@@ -127,5 +127,51 @@ exports.postHtml = function(req, res) {
 }
 
 exports.postCategory = function (req,res) {
+
+}
+
+exports.getOrphan = function(req, res) {
+    var author_id = req.params.author_id;
+    var subquery = Parent_child.query();
+    subquery.select('parent_child.child_dagr_guid');
+
+    var qb = Dagr.query();
+    qb.where({author_id: author_id}).where('guid', 'not in', subquery)
+    .whereNull('deletion_time').select().then(function(resp) {
+        console.log(resp);
+        res.send(resp);
+    })
+
+
+}
+
+exports.getSterile = function(req, res) {
+    var author_id = req.params.author_id;
+    var subquery = Parent_child.query();
+    subquery.select('parent_child.parent_dagr_guid');
+
+    var qb = Dagr.query();
+    qb.where({author_id: author_id}).where('guid', 'not in', subquery)
+    .whereNull('deletion_time').select().then(function(resp) {
+        console.log(resp);
+        res.send(resp);
+    })
+
+}
+
+exports.getTimeRange = function(req, res) {
+    var author_id = req.params.author_id;
+    var start = req.body.start_time;
+    var end = req.body.end_time;
+
+    console.log(start);
+    console.log(end);
+
+    var qb = Dagr.query();
+    qb.where({author_id: author_id}).whereNull('deletion_time')
+    .whereBetween('creation_time', [start, end]).select().then(function(resp) {
+        console.log(resp);
+        res.send(resp);
+    })
 
 }

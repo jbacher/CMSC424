@@ -72,16 +72,17 @@ app.post('/api/:author_id/file/:parent_dagr_guid', apiController.postFile);
 app.post('/api/:author_id/category/:parent_dagr_guid', apiController.postCategory);
 
 app.get('/download', downloadController.download)
-app.post('/api/:author_id/orphan', apiController.getOrphan);
-app.post('/api/:author_id/sterile', apiController.getSterile);
-app.post('/api/:author_id/time_range', apiController.getTimeRange);
-app.post('/api/:author_id/search', apiController.search)
+app.get('/:author_id/orphan', apiController.getOrphan);
+app.get('/:author_id/sterile', apiController.getSterile);
+app.get('/api/:author_id/time_range', apiController.getTimeRange);
+app.get('/:author_id/search', apiController.search)
 
 // app.get('/api/top_level/:user_id', apiController.getTopLevel)
 
 app.get('/mmda/:user_id', userDagrController.getMMDA);
 app.get('/mmda/:user_id/all', userDagrController.getAll);
 app.get('/mmda/:user_id/:dagr_guid', userDagrController.getCategory)
+app.get('/mmda/:user_id/reach/:dagr_guid', userDagrController.reach);
 // app.get('/api/:author_id/orphan', apiController.getOrphan);
 // app.get('/api/:author_id/sterile', apiController.getSterile);
 // app.get('/api/:author_id/time_range', apiController.getTimeRange);

@@ -4,56 +4,93 @@ var Dagr_doc = require('../models/Dagr_doc');
 var Parent_child = require('../models/Parent_child');
 var scrape = require('html-metadata');
 const uuidV1 = require('uuid/v1');
+var request = require('request');
+const cheerio = require('cheerio')
 
 exports.postFile = function(req, res) {
     console.log('hi');
-    //when we add in the UI, we should sanitize the input either here or there
-    //need to see how to 'upload' file
-    //don't forget about the filepath as well
-    var currTime = new Date();
+
     //dont forget to save it to dagr doc as well!!!!!
     // var qb = Dagr.query();
-
+    var type = req.body.type;
+    console.log(req.body.path)
     //possibly a duplicate check here
+    var name = ''
+    if (type == 'html') {
+        request(req.body.path[0], function(error, response, body){
+            if (!error && response.statusCode == 200) {
+               const $ = cheerio.load(body);
+               name+= $('title').text();
+               console.log('name')
+               console.log(name)
+               return addNewDagr(name, type, req, res);
+            } else {
+                return res.send('error')
+            }
+        })
+     } else {
+        name += req.body.name
+        return addNewDagr(name, type, req, res);
+    }
+}
+
+    //need to wait for callback
+
+  function addNewDagr(name, type, req, res){ 
+    console.log('called') 
+    var currTime = new Date();
     var uuid1 = uuidV1();
     var uuid2 =  uuidV1();
     new Dagr({
         guid: uuid1,
-        name: req.body.name,
+        name: name,
         creation_time: currTime,
         last_Modified: currTime,
         author_id : req.params.author_id,
-        size: req.body.size
+        size: type=='file' ? req.body.size:-1
         // author_id: //how to get id of current user, maybe use jquery?
     }).save()
     .then(function(user) {
+        console.log('hi4')
+        console.log('saved')
+        var path_var = req.body.path[0] ? req.body.path[0] : req.body.path[1]
         //probably want to redirect somewhere else
         //maybe want to send an acknowledgment it worked and then have popup
         new Document({
                 guid: uuid2,
-                filepath_url: req.body.path
+                filepath_url: path_var
             }).save().then(function(user){
+                console.log('hi5')
+                console.log(uuid1);
+                console.log(uuid2);
                 new Dagr_doc({
                     dagr_guid: uuid1,
                     document_guid: uuid2
                 }).save().then(function(user){
                     if (req.params.parent_dagr_guid == 'top') {
-                        res.send('success');
+                        res.redirect('back');
+                        // return res.send('cool')
                     } else {
                         new Parent_child({
                             parent_dagr_guid: req.params.parent_dagr_guid,
                             child_dagr_guid: uuid1
                         }).save().then(function (user) {
-                            res.send('success');
+                            res.redirect('back');
+                            // return res.send('cool2')
                         }).catch(function(err){
+                            console.log('temp3')
                             res.send('error in 4th query');
                         })
                     }
                 }).catch(function(err){
                     console.log(err);
+                    console.log("temp2")
                     res.send('error in third query')
                 })
+            
             }).catch(function(err){
+                console.log(err);
+                console.log('temp')
                 res.send('error in second query')
             })
     })
@@ -112,7 +149,9 @@ exports.postHtml = function(req, res) {
                     res.send('error in third query')
                 })
             }).catch(function(err){
-                res.send('error in second query')
+                res.send('wahhhh')
+                // console.log('teset')
+                // res.send('error in second query')
             })
             //probably want to redirect somewhere else
             //maybe want to send an acknowledgment it worked and then have popup
@@ -226,7 +265,13 @@ exports.getOrphan = function(req, res) {
     qb.where({author_id: author_id}).where('guid', 'not in', subquery)
     .whereNull('deletion_time').select().then(function(resp) {
         console.log(resp);
-        res.send(resp);
+        res.render('user', {
+            title: 'Orphan Report',
+            is_single: false,
+            dagr: resp[0],
+            u_id : author_id,
+            dagrs:resp
+        })
     })
 
 
@@ -241,21 +286,53 @@ exports.getSterile = function(req, res) {
     qb.where({author_id: author_id}).where('guid', 'not in', subquery)
     .whereNull('deletion_time').select().then(function(resp) {
         console.log(resp);
-        res.send(resp);
+        res.render('user', {
+            title: 'Sterile Report',
+            is_single: false,
+            dagr: resp[0],
+            u_id : author_id,
+            dagrs:resp
+        })
     })
 
 }
 
+//get time range is the new search
+
 exports.getTimeRange = function(req, res) {
+
+    console.log('test');
+    console.log(req.body);
+
     var author_id = req.params.author_id;
-    var start = req.body.start_time;
-    var end = req.body.end_time;
+    var start = req.query.start_time;
+    var end = req.query.end_time;
+    var name = req.query.name;
+    console.log(author_id)
+    console.log(start)
+    console.log(end)
+    console.log(name)
 
     var qb = Dagr.query();
-    qb.where({author_id: author_id}).whereNull('deletion_time')
-    .whereBetween('creation_time', [start, end]).select().then(function(resp) {
+    qb.where({author_id: author_id}).whereNull('deletion_time');
+    if (start != '' && end != '') {
+
+        ///
+////// NEED TO CHANGE THE SCHEMA FROM TIME TO DATETIME
+//////
+        qb.whereBetween('creation_time', [start, end])
+    }
+    if (name != '') 
+        qb.where('name', 'like', '%'+name+'%')
+    qb.select().then(function(resp) {
         console.log(resp);
-        res.send(resp);
+        // res.send(resp);
+        res.render('user', {
+            dagrs: resp,
+            title: 'DAGR Search',
+            is_single: false,
+            u_id : author_id
+        })
     })
 
 }
@@ -263,9 +340,8 @@ exports.getTimeRange = function(req, res) {
 exports.search = function(req, res) {
     var author_id = req.params.author_id;
     var name = req.body.name;
-    var creation_time = req.body.creation_time;
-    var guid = req.body.guid;
-    var last_Modified = req.body.last_Modified;
+    var start = req.body.start_time;
+    var end = req.body.end_time;
 
     var qb = Dagr.query();
     qb.where({author_id: author_id}).whereNull('deletion_time')

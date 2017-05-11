@@ -2,24 +2,102 @@ extends layout
 block content
     //- there should be a button up here or on the header that will allow for range queries
     //- 
-    for dagr in dagrs
+    //- i want to keep this styling for the table
+    .row
+        h1.my-head #{title}
+    .row
+        if (!dagr || !dagr.path)
+            .col-sm-2
+                button#add.right.btn.btn-primary Add new DAGR here
+            .col-sm-2
+                a#reach.right.btn.btn-primary(href='/mmda/#{u_id}/reach/#{dagr_guid ? dagr_guid : "top"}') Reach Query at this level
+        .col-sm-2
+            a#orphan.right.btn.btn-primary(href="/#{u_id}/orphan") Orphan Report
+        .col-sm-2
+            a#sterile.right.btn.btn-primary(href="/#{u_id}/sterile") Sterile Report
+        .col-sm-2
+            button#search.right.btn.btn-primary Search your DAGRs
+        .col-sm-2
+            a#bulk.right.btn.btn-primary(href="/download") Bulk Add DAGRs    
+
+    form#search-form.hidden.form-class(method='GET' action="/api/#{u_id}/time_range")
+        div.form-group.row
+            label.col-form-label.col-sm-2(for='name') Name:
+            input.form-control(type='text' name='name')
+        div.form-group.row
+            label.col-form-label(for='start_time') Start Time:
+            input.form-control(type='datetime-local' name='start_time')
+        div.form-group.row
+            label.col-form-label(for='end_time') End Time:
+            input.form-control(type='datetime-local' name='end_time') 
+        div.form-group.row
+            div.offset-sm-2.col-sm-10
+                button.btn.btn-primary(type='submit') Search
+
+    form#hidden-form.hidden.form-class(method='POST' action='/api/#{u_id}/file/#{dagr_guid ? dagr_guid : "top"}')    
+        label.temp What type of DAGR do you want to add?
+        .row.form-con(data-toggle='buttons')
+            label.btn.btn-primary.col-md-4#t1
+                <input class='rdio' type='radio' name='type' value='cat'>Category</input>
+            label.btn.btn-primary.col-md-4#t2
+                <input class='rdio' type='radio' name='type' value='file'>File</input>
+            label.btn.btn-primary.col-md-4#t3
+                <input class='rdio' type='radio' name='type' value='html'>Webpage</input>
+        div.form-group.row#url.hidden
+            label.col-form-label(for='path') Url:
+            input.form-control(type='text' name='path')
+        div.form-group.row#path.hidden
+            label.col-form-label(for='path') Path:
+            input.form-control(type='text' name='path')
+        div.form-group.row#name.hidden
+            label.col-form-label(for='name') Dagr Name:
+            input.form-control(type='text' name='name')
+        div.form-group.row#size.hidden
+            label.col-form-label(for='name') Size (in bytes):
+            input.form-control(type='number' name='size')
+        div.form-group.row#submit-add.hidden
+            div.offset-sm-2.col-sm-10
+                button.btn.btn-primary(type='submit') Add
+        
+    if is_single
         .row
             .panel
                 .panel-body
                     .ul
-                        li Guid: #{dagr.guid}
                         li Name: #{dagr.name}
+                        if (dagr.path)
+                            li Path/Url: #{dagr.path}
                         li Creation Time: #{dagr.creation_time}
-                        li Deletion Time: #{dagr.deletion_time}
                         li Last Modified: #{dagr.last_Modified}
-                        li Size: #{dagr.size}
-                        li Author Id: #{dagr.author_id}
-    //- below should only appear when a user logs in
-    //- they will have to click a button for this to pop up
-    form(method='POST' action='/')
-        div.form-group.row
-            label.col-form-label(for='path') Path:
-            input.form-control(type='text' name='path')
-        div.form-group.row
-            div.offset-sm-2.col-sm-10
-                button.btn.btn-primary(type='submit') Submit
+                        if (dagr.size != -1)
+                            li Size: #{dagr.size} Bytes
+
+    else
+        table.dagr-tab.table.table-bordered
+            thead
+                th Name
+                th Creation Time
+                th Last Modified
+                th Size
+                th View Information
+                th Delete
+            tbody
+                for dagr in dagrs
+                        tr        
+                            td #{dagr.name}
+                            td #{dagr.creation_time}
+                            td #{dagr.last_Modified}
+                            if dagr.size == -1
+                                td N/A
+                            else
+                                td #{dagr.size} Bytes
+                            td 
+                                a.btn.btn-default(href='/mmda/#{dagr.author_id}/#{dagr.guid}') View Dagr
+                            td
+                                a.delete.btn.btn-default(href='/') Delete Dagr
+
+    //- for dagr in dagrs
+    
+    //- this is for metadata query
+
+                

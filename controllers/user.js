@@ -39,7 +39,7 @@ exports.loginPost = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('error', errors);
+    req.flash('error', errors); 
     return res.redirect('/login');
   }
 

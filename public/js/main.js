@@ -49,4 +49,21 @@ $(function() {
     $('#size').addClass('hidden')
     $('#submit-add').removeClass('hidden');
   })
+
+  $('.delete').click(function(){
+    var recursive = null;
+    if(confirm("DO you wish to delete recursively? Click 'OK' to do so, Click 'Cancel' to just delete this DAGR. Click the 'x' to cancel")){
+      console.log('test2')
+      recursive = true
+    }else {//do nothing. This will fire if cancel is clicked.
+      console.log('test')
+      rescursive = false
+    }
+    var url = '/api/'+this.id+'/delete/'+recursive
+    $.post(url, {}).done(
+      function(data) {
+        alert('DAGR deleted, please reload page')
+      }
+    )
+  })
 });

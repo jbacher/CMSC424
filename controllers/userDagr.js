@@ -168,7 +168,7 @@ exports.getCategory = function(req,res) {
                                     resp[0].path = url
                                     return res.render('user', {
                                         title: 'DAGR: '+resp[0].name,
-                                        is_single: true,
+                                        is_single: url ? true : false,
                                         dagr: resp[0],
                                         dagrs : [],
                                         dagr_guid: req.params.dagr_guid

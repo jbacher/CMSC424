@@ -77,7 +77,7 @@ app.post('/api/:author_id/orphan', apiController.getOrphan);
 app.post('/api/:author_id/sterile', apiController.getSterile);
 app.post('/api/:author_id/time_range', apiController.getTimeRange);
 app.post('/api/:author_id/search', apiController.search);
-app.post('/api/:author_id/delete'), apiController.delete);
+app.post('/api/:dagr_guid/delete/:recursive', apiController.delete);
 
 
 

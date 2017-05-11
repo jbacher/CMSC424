@@ -22,16 +22,15 @@ exports.postFile = function(req, res) {
         res.redirect('back');
         return;
     }
-
-
-
-
+    console.log('1')
     var query = Document.query()
-    .whereIn("filepath_url",  req.body.path)
+    .whereIn("filepath_url",  req.body.path[0]==''&&req.body.path[1]==''?[]:(req.body.path[0]==''? req.body.path[1]: req.body.path[0] )) 
     .select().then(function (resp) {
+    var name = '';
     if (resp.length != 0) {
         res.redirect('back')
     } else {
+            console.log('2')
             if (type == 'html') {
         request(req.body.path[0], function(error, response, body){
             if (!error && response.statusCode == 200) {
@@ -77,8 +76,8 @@ exports.postFile = function(req, res) {
         //probably want to redirect somewhere else
         //maybe want to send an acknowledgment it worked and then have popup
         new Document({
-                guid: uuid2,
-                filepath_url: path_var
+                guid: path_var == '' ? uuid2 : null,
+                filepath_url: path_var? path_var: null
             }).save().then(function(user){
                 console.log('hi5')
                 console.log(uuid1);
@@ -391,25 +390,47 @@ exports.search = function(req, res) {
 }
 
 exports.delete = function(req, res) {
-    var recursive = req.body.recursive;
-    var guid = req.body.guid;
-    var author_id = req.params.author_id;
+    var recursive = req.params.recursive;
+    var guid = req.params.dagr_guid;
+    // var author_id = req.params.author_id;
     var currTime = new Date();
     var qb = Dagr.query();
 
-    if(recursive === false) {
+    if(recursive == 'false') {
         qb.where({guid: guid}).whereNull('deletion_time')
         .update({deletion_time: currTime}).then(function(resp) {
-            res.send('success');
+            res.redirect('back');
         }).catch(function(error) {
             console.log(error);
             res.send('Error deleting individual Dagr');
         })
     }
     else {
-        // add recursive part
-        var queue = [];
-
+        var to_delete = [guid]
+        var temp = []
+        var q1 = Parent_child.query()
+        .where({parent_dagr_guid: guid})
+        .select().then(function (resp){
+            for (var i =0; i<resp.length; i++) {
+                temp.push(resp[i].child_dagr_guid)
+                to_delete.push(resp[i].child_dagr_guid)
+            }
+            var q2 = Parent_child.query()
+            .whereIn('parent_dagr_guid', temp)
+            .select().then(function(resp2){  
+                for (i=0; i<resp2.length; i++) {
+                    to_delete.push(resp[i].child_dagr_guid)
+                }
+                var qb2 = Dagr.query()
+                 .whereIn('guid', to_delete).whereNull('deletion_time')
+                .update({deletion_time: currTime}).then(function(resp) {
+                    res.redirect('back');
+                }).catch(function(error){
+                    console.log('error')
+                    res.send('error')
+                })
+            })
+        })
     }
 }
 

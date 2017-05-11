@@ -2,15 +2,16 @@
 import os
 import json
 import requests
-
+token = raw_input('Please input the token that you were given: ')
+path = name_of_dagr = raw_input('Enter the root path of the files you want to ingest: ')
 name_of_dagr = raw_input('Enter the name of your new Dagr: ')
 file_extension = raw_input('Enter the file extensions you want to add, or type n/a for all (no need for "."): ')
-token = raw_input('Please input the token that you were given: ')
+
 
 #prompt user for a file extention
 #and name of Dagr they want to organize under 
 
-root = r"C:\Users\jakeb\Documents"
+root = path
 res = {
     'name': name_of_dagr,
     'dagrs' : []
@@ -38,6 +39,6 @@ for root, dirnames, filenames in os.walk(root):
 
 # headers = {'content-type': 'applicaiton/json'}
 print(res)
-r = requests.post("http://localhost:3000/api/"+token+"/bulkupload", res)
+r = requests.post("https://intense-reaches-84609.herokuapp.com/api/"+token+"/bulkupload", res)
 print(r.status_code, r.reason);
 #send a big json object and we can handle it with api endpoint

@@ -19,7 +19,7 @@ exports.postFile = function(req, res) {
     //possibly a duplicate check here
     if(check_duplicates(req.body.path, req.params.author_id) === false) {
         console.log('cannot add, duplicate content');
-        res.send('cannot add, duplicate content');
+        res.redirect('back');
         return;
     }
 

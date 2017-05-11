@@ -398,7 +398,7 @@ exports.delete = function(req, res) {
     var qb = Dagr.query();
 
     if(recursive === false) {
-        qb.where({author_id: author_id, guid: guid}).whereNull('deletion_time')
+        qb.where({guid: guid}).whereNull('deletion_time')
         .update({deletion_time: currTime}).then(function(resp) {
             res.send('success');
         }).catch(function(error) {
@@ -408,6 +408,8 @@ exports.delete = function(req, res) {
     }
     else {
         // add recursive part
+        var queue = [];
+
     }
 }
 

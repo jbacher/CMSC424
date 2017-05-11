@@ -20,7 +20,7 @@ exports.ensureAuthenticated = function(req, res, next) {
  */
 exports.loginGet = function(req, res) {
   if (req.user) {
-    return res.redirect('/mmda/'+req.user.facebook);
+    return res.redirect('/mmda/'+req.user.attributes.facebook);
   }
   res.render('account/login', {
     title: 'Log in'

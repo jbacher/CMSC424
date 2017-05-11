@@ -7,6 +7,8 @@ const uuidV1 = require('uuid/v1');
 var request = require('request');
 const cheerio = require('cheerio')
 
+//check for duplicates :O
+
 exports.postFile = function(req, res) {
     console.log('hi');
 
@@ -15,14 +17,19 @@ exports.postFile = function(req, res) {
     var type = req.body.type;
     console.log(req.body.path)
     //possibly a duplicate check here
-    var name = ''
-    if (type == 'html') {
+    var query = Document.query()
+    .whereIn("filepath_url",  req.body.path)
+    .select().then(function (resp) {
+    if (resp.length != 0) {
+        res.redirect('back')
+    } else {
+            if (type == 'html') {
         request(req.body.path[0], function(error, response, body){
             if (!error && response.statusCode == 200) {
                const $ = cheerio.load(body);
                name+= $('title').text();
                console.log('name')
-               console.log(name)
+               console.log(name);
                return addNewDagr(name, type, req, res);
             } else {
                 return res.send('error')
@@ -32,6 +39,9 @@ exports.postFile = function(req, res) {
         name += req.body.name
         return addNewDagr(name, type, req, res);
     }
+    }
+
+    })
 }
 
     //need to wait for callback
@@ -41,6 +51,7 @@ exports.postFile = function(req, res) {
     var currTime = new Date();
     var uuid1 = uuidV1();
     var uuid2 =  uuidV1();
+
     new Dagr({
         guid: uuid1,
         name: name,

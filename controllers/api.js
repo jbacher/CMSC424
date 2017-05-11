@@ -15,6 +15,14 @@ exports.postFile = function(req, res) {
     // var qb = Dagr.query();
 
     //possibly a duplicate check here
+    if(check_duplicates(req.body.path, req.params.author_id) === false) {
+        console.log('cannot add, duplicate content');
+        res.send('cannot add, duplicate content');
+        return;
+    }
+
+
+
     var uuid1 = uuidV1();
     var uuid2 =  uuidV1();
     new Dagr({
@@ -71,6 +79,13 @@ exports.postHtml = function(req, res) {
     //especially for images
     var url = req.body.url;
     console.log(url)
+
+    if(check_duplicates(url, req.params.author_id) === true) {
+        console.log('cannot add, duplicate content');
+        res.send('cannot add, duplicate content');
+        return;
+    }
+
     scrape(url, function(error, metadata){
         if (error) {
             console.log(error);
@@ -138,7 +153,7 @@ exports.bulkUpload = function (req,res) {
     var uuid3 = uuidV1();
     var currTime = new Date();
 
-    new Dagr({  
+    new Dagr({
         guid: uuid3,
         name: req.body.name,
         creation_time: currTime,
@@ -157,13 +172,22 @@ exports.bulkUpload = function (req,res) {
         var currTime = new Date();
     //dont forget to save it to dagr doc as well!!!!!
     // var qb = Dagr.query();
-    
+
     //possibly a duplicate check here
-        var uuid1 = uuidV1(); 
+        var uuid1 = uuidV1();
         var uuid2 =  uuidV1();
         var name = files_to_be_added[i]
         var size = files_to_be_added[i+2]
         var path = files_to_be_added[i+1]
+
+        // Not sure if this will work here
+        /*if(check_duplicates(path, req.params.author_id) === true) {
+            console.log('cannot add, duplicate content');
+            res.send('cannot add, duplicate content');
+            return;
+        }*/
+
+
         new Dagr({
             guid: uuid1,
             name: name,
@@ -213,10 +237,11 @@ exports.bulkUpload = function (req,res) {
             // res.send(err);
             // res.send('error');
         });
-    }    
+    }
     res.send('success')
     })
 }
+
 exports.getOrphan = function(req, res) {
     var author_id = req.params.author_id;
     var subquery = Parent_child.query();
@@ -275,7 +300,42 @@ exports.search = function(req, res) {
         console.log(resp);
         res.send(resp);
     })
+}
 
+exports.delete = function(req, res) {
+    var recursive = req.body.recursive;
+    var guid = req.body.guid;
+    var author_id = req.params.author_id;
+    var currTime = new Date();
+    var qb = Dagr.query();
 
+    if(recursive === false) {
+        qb.where({author_id: author_id, guid: guid}).whereNull('deletion_time')
+        .update({deletion_time: currTime}).then(function(resp) {
+            res.send('success');
+        }).catch(function(error) {
+            console.log(error);
+            res.send('Error deleting individual Dagr');
+        })
+    }
+    else {
+        // add recursive part
+    }
+}
+
+check_duplicates = function(doc_path, author_id) {
+    var qb = Document.query();
+
+    qb.where({author_id: author_id, filepath_url: doc_path}).select()
+    .then(function(resp) {
+        if(resp.length === 0) {
+            console.log('Not a duplicate');
+            return true;
+        }
+        else {
+            console.log('Duplicate: '+doc_path);
+            return false
+        }
+    })
 
 }

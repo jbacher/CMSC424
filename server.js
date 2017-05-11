@@ -47,7 +47,7 @@ app.use(function(req, res, next) {
 });
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', HomeController.index);
+// app.get('/', HomeController.index);
 // app.get('/contact', contactController.contactGet);
 // app.post('/contact', contactController.contactPost);
 app.get('/account', userController.ensureAuthenticated, userController.accountGet);
@@ -55,7 +55,7 @@ app.put('/account', userController.ensureAuthenticated, userController.accountPu
 app.delete('/account', userController.ensureAuthenticated, userController.accountDelete);
 app.get('/signup', userController.signupGet);
 app.post('/signup', userController.signupPost);
-app.get('/login', userController.loginGet);
+app.get(['/','/login'], userController.loginGet);
 app.post('/login', userController.loginPost);
 app.get('/forgot', userController.forgotGet);
 app.post('/forgot', userController.forgotPost);
@@ -72,6 +72,7 @@ app.post('/api/:author_id/file/:parent_dagr_guid', apiController.postFile);
 app.post('/api/:author_id/category/:parent_dagr_guid', apiController.postCategory);
 
 app.get('/download', downloadController.download)
+
 app.post('/api/:author_id/orphan', apiController.getOrphan);
 app.post('/api/:author_id/sterile', apiController.getSterile);
 app.post('/api/:author_id/time_range', apiController.getTimeRange);
@@ -79,11 +80,13 @@ app.post('/api/:author_id/search', apiController.search);
 app.post('/api/:author_id/delete'), apiController.delete);
 
 
+
 // app.get('/api/top_level/:user_id', apiController.getTopLevel)
 
 app.get('/mmda/:user_id', userDagrController.getMMDA);
 app.get('/mmda/:user_id/all', userDagrController.getAll);
 app.get('/mmda/:user_id/:dagr_guid', userDagrController.getCategory)
+app.get('/mmda/:user_id/reach/:dagr_guid', userDagrController.reach);
 // app.get('/api/:author_id/orphan', apiController.getOrphan);
 // app.get('/api/:author_id/sterile', apiController.getSterile);
 // app.get('/api/:author_id/time_range', apiController.getTimeRange);

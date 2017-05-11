@@ -20,7 +20,7 @@ exports.ensureAuthenticated = function(req, res, next) {
  */
 exports.loginGet = function(req, res) {
   if (req.user) {
-    return res.redirect('/');
+    return res.redirect('/mmda/'+req.user.attributes.facebook);
   }
   res.render('account/login', {
     title: 'Log in'
@@ -49,7 +49,7 @@ exports.loginPost = function(req, res, next) {
       return res.redirect('/login')
     }
     req.logIn(user, function(err) {
-      res.redirect('/');
+      res.redirect('/mmda/'+user.facebook);
     });
   })(req, res, next);
 };

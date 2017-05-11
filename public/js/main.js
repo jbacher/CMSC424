@@ -1,9 +1,12 @@
 $(function() {
   // Your custom JavaScript goes here
   $('#bulk').click(function(){
+    var url = window.location.href;
+    var re = /mmda\/(\d+)/
+    var my_arr = url.match(re)
     window.prompt('You are about to Download our bulk-adding agent'
     +'\nSimply unzip, run the .exe file and follow the instructions'
-    +'\nYour token is shown below. Please copy it to your clipboard', 662903737229708);
+    +'\nYour token is shown below. Please copy it to your clipboard', my_arr[0].substring(5));
   })
 
   $('#add').click(function(){

@@ -9,8 +9,6 @@ nav.navbar.navbar-default.navbar-static-top
       a.navbar-brand(href='/') DAGR Dictionary
     #navbar.navbar-collapse.collapse
       ul.nav.navbar-nav
-        li(class=(title == 'Home') ? 'active' : null)
-          a(href='/') All MMDAs
         if user 
           li(class=(title == 'MMDA') ? 'active' : null)
             a(href='/mmda/#{user.facebook}') My MMDA

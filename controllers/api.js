@@ -314,6 +314,7 @@ exports.getOrphan = function(req, res) {
 }
 
 exports.getSterile = function(req, res) {
+    console.log('test')
     var author_id = req.params.author_id;
     var subquery = Parent_child.query();
     subquery.select('parent_child.parent_dagr_guid');

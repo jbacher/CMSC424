@@ -87,9 +87,9 @@ app.get('/mmda/:user_id', userDagrController.getMMDA);
 app.get('/mmda/:user_id/all', userDagrController.getAll);
 app.get('/mmda/:user_id/:dagr_guid', userDagrController.getCategory)
 app.get('/mmda/:user_id/reach/:dagr_guid', userDagrController.reach);
-app.get('/api/:author_id/orphan', apiController.getOrphan);
-app.get('/api/:author_id/sterile', apiController.getSterile);
-app.get('/api/:author_id/time_range', apiController.getTimeRange);
+app.get('/:author_id/orphan', apiController.getOrphan);
+app.get('/:author_id/sterile', apiController.getSterile);
+app.get('/:author_id/time_range', apiController.getTimeRange);
 app.get('/mmda/:user_id/:dagr_guid', userDagrController.getCategory);
 
 app.post('/api/:author_id/bulkupload', apiController.bulkUpload);

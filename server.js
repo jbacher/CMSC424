@@ -89,7 +89,7 @@ app.get('/mmda/:user_id/:dagr_guid', userDagrController.getCategory)
 app.get('/mmda/:user_id/reach/:dagr_guid', userDagrController.reach);
 app.get('/:author_id/orphan', apiController.getOrphan);
 app.get('/:author_id/sterile', apiController.getSterile);
-app.get('/:author_id/time_range', apiController.getTimeRange);
+app.get('/api/:author_id/time_range', apiController.getTimeRange);
 app.get('/mmda/:user_id/:dagr_guid', userDagrController.getCategory);
 
 app.post('/api/:author_id/bulkupload', apiController.bulkUpload);
